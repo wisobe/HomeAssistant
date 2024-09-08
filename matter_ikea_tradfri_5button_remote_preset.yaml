@@ -40,7 +40,7 @@ blueprint:
       selector:
         device:
           filter:
-            - integration: zha
+            - integration: matter
               manufacturer: IKEA of Sweden
               model: TRADFRI remote control
     light:
