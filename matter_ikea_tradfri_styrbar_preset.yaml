@@ -61,7 +61,7 @@ variables:
 
 trigger:
   - platform: event
-    event_type: zha_event
+    event_type: initial_press
     event_data:
       device_id: !input remote
 
