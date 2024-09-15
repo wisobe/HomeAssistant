@@ -9,7 +9,7 @@ blueprint:
 
   description: >-
     This automation simulates the use of the IKEA TRADFRI STYRBAR remote control
-    connected through ZHA.
+    connected through Matter.
 
   domain: automation
 
