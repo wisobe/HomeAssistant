@@ -20,7 +20,7 @@ blueprint:
       selector:
         device:
           filter:
-            - integration: zha
+            - integration: matter
               manufacturer: IKEA of Sweden
               model: Remote Control N2
 
