@@ -1,7 +1,7 @@
 blueprint:
-  name: IKEA Somrig Cover Control (Z2M)
+  name: IKEA Somrig Cover Control (Matter)
   description: "## Control any cover with IKEA Somrig shortcut button
-    Should be used with Zigbee2MQTT
+    Should be used with Matter
     Available controls:
       - Single dot: Open cover
       - Double dot: Close cover
@@ -16,7 +16,7 @@ blueprint:
       selector:
         entity:
           filter:
-            - integration: mqtt
+            - integration: matter
               domain: sensor
     cover_entity:
       name: Cover entity
@@ -40,11 +40,11 @@ trigger:
   - platform: state
     entity_id: !input remote_entity
     from: ''
-    to: '1_initial_press'
+    to: 'multi_press_2'
   - platform: state
     entity_id: !input remote_entity
     from: ''
-    to: '2_initial_press'
+    to: 'multi_press_1'
 action:
   - variables:
       window_sensor_entity: !input window_sensor_entity
