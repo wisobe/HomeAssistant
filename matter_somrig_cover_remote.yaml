@@ -1,0 +1,86 @@
+blueprint:
+  name: IKEA Somrig Cover Control (Z2M)
+  description: "## Control any cover with IKEA Somrig shortcut button
+    Should be used with Zigbee2MQTT
+    Available controls:
+      - Single dot: Open cover
+      - Double dot: Close cover
+      - While the cover is moving, press any button to stop the movement
+    "
+  source_url: https://gist.github.com/jeffreykog/f5d9db269c52b55e87a93c0097e8400a
+  domain: automation
+  input:
+    remote_entity:
+      name: Somrig Remote Action Entity
+      description: The "Action" entity of the Somrig remote, as created by Zigbee2MQTT
+      selector:
+        entity:
+          filter:
+            - integration: mqtt
+              domain: sensor
+    cover_entity:
+      name: Cover entity
+      description: The cover entity that should be controlled by the Somrig remote.
+      selector:
+        entity:
+          filter:
+            - domain: cover
+    window_sensor_entity:
+      name: Open window sensor
+      description: Optional window sensor entity. Movement of the cover will be blocked when the window is open.
+      default:
+      selector:
+        entity:
+          filter:
+            - domain: binary_sensor
+              device_class: door
+mode: single
+max_exceeded: silent
+trigger:
+  - platform: state
+    entity_id: !input remote_entity
+    from: ''
+    to: '1_initial_press'
+  - platform: state
+    entity_id: !input remote_entity
+    from: ''
+    to: '2_initial_press'
+action:
+  - variables:
+      window_sensor_entity: !input window_sensor_entity
+  - if:
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: !input cover_entity
+            state: opening
+          - condition: state
+            entity_id: !input cover_entity
+            state: closing
+    then:
+      - action: cover.stop_cover
+        target:
+          entity_id: !input cover_entity
+    else:
+      - if:
+          - condition: template
+            value_template: "{{ trigger.to_state.state == \"1_initial_press\" }}"
+        then:
+          - if:
+              - condition: template
+                value_template: "{{ window_sensor_entity is none or is_state(window_sensor_entity, 'off') }}"
+            then:
+              - action: cover.open_cover
+                target:
+                  entity_id: !input cover_entity
+      - if:
+          - condition: template
+            value_template: "{{ trigger.to_state.state == \"2_initial_press\" }}"
+        then:
+          - if:
+              - condition: template
+                value_template: "{{ window_sensor_entity is none or is_state(window_sensor_entity, 'off') }}"
+            then:
+              - action: cover.close_cover
+                target:
+                  entity_id: !input cover_entity
