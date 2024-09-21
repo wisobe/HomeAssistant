@@ -1,5 +1,5 @@
 blueprint:
-  name: Parabolic Alarm Automation
+  name: Parabolic Alarm Automation - PG
   description: Turn a light on based on detected motion
   domain: automation
   input:
