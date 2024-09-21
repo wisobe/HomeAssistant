@@ -17,6 +17,13 @@ blueprint:
         entity:
           filter:
             - domain: binary_sensor
+    home_deactivated:
+      name: Home DeactivatedWorkday Sensor
+      description: Binary Sensor for determining whether your home automations are active or not
+      selector:
+        entity:
+          filter:
+            - domain: binary_sensor        
     alarm_script:
       name: Script to trigger
       description: Light Alarm Script
@@ -53,7 +60,7 @@ blueprint:
       selector:
         color_temp:
           unit: kelvin
-      default: 2500
+      default: 2200
       name: Starting Kelvin
     target_kelvin_1:
       description: >-
@@ -61,7 +68,7 @@ blueprint:
       selector:
         color_temp:
           unit: kelvin
-      default: 3000
+      default: 2400
       name: Target Kelvin 1
     max_brightness_1:
       name: Maximum Brightness 1
@@ -87,7 +94,7 @@ blueprint:
       selector:
         color_temp:
           unit: kelvin
-      default: 4000
+      default: 2600
       name: Target Kelvin 2
     max_brightness_2:
       name: Maximum Brightness 2
@@ -113,7 +120,7 @@ blueprint:
       selector:
         color_temp:
           unit: kelvin
-      default: 6500
+      default: 2700
       name: Target Kelvin 3
     max_brightness_3:
       name: Maximum Brightness 3
@@ -141,6 +148,9 @@ condition:
   - condition: state
     entity_id: !input workday_sensor
     state: "on"
+  - condition: state
+    entity_id: !input home_deactivated
+    state: "off"
 
 action:
   - action: light.turn_on
