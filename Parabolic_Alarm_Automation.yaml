@@ -18,12 +18,12 @@ blueprint:
           filter:
             - domain: binary_sensor
     home_deactivated:
-      name: Home DeactivatedWorkday Sensor
+      name: Home Deactivated
       description: Binary Sensor for determining whether your home automations are active or not
       selector:
         entity:
           filter:
-            - domain: binary_sensor        
+            - domain: input_boolean        
     alarm_script:
       name: Script to trigger
       description: Light Alarm Script
