@@ -1,3 +1,6 @@
+# Blueprint developped by Steku -  https://github.com/steku/ha_cercadian_alarm
+# Adapted by WisoBe for personal needs
+# Link: https://github.com/wisobe/HomeAssistant/Parabolic_Alarm_Automation.yaml
 blueprint:
   name: Parabolic Alarm Automation - PG - 0.1
   description: Turn a light on based on detected motion
@@ -19,7 +22,7 @@ blueprint:
             - domain: binary_sensor
     home_deactivated:
       name: Home Deactivated
-      description: Binary Sensor for determining whether your home automations are active or not
+      description: Sensor for determining if your home is activated or not
       selector:
         entity:
           filter:
