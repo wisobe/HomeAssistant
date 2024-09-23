@@ -1,6 +1,6 @@
 # Blueprint developped by Steku -  https://github.com/steku/ha_cercadian_alarm
 # Adapted by WisoBe for personal needs
-# Link: https://github.com/wisobe/HomeAssistant/Parabolic_Alarm_Automation.yaml
+# Link: https://github.com/wisobe/HomeAssistant/blob/main/Parabolic_Alarm_Automation.yaml
 blueprint:
   name: Parabolic Alarm Automation - PG - 0.1
   description: Turn a light on based on detected motion
