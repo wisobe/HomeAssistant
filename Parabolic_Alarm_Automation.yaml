@@ -2,7 +2,7 @@
 # Adapted by WisoBe for personal needs
 # Link: https://github.com/wisobe/HomeAssistant/blob/main/Parabolic_Alarm_Automation.yaml
 blueprint:
-  name: Parabolic Alarm Automation - PG - 0.1
+  name: Parabolic Alarm Automation - WisoBe - 0.1
   description: Turn a light on based on detected motion
   domain: automation
   input:
