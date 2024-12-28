@@ -2,7 +2,7 @@
 # Adapted by WisoBe for personal needs
 # Link: https://github.com/wisobe/HomeAssistant/blob/main/Parabolic_Alarm_Automation.yaml
 blueprint:
-  name: Parabolic Alarm Automation - WisoBe - 0.2.1
+  name: Parabolic Alarm Automation - WisoBe - 0.2.2
   description: Turn a light on based on detected motion
   domain: automation
   input:
@@ -28,8 +28,8 @@ blueprint:
           filter:
             - domain: input_boolean
     pedagogical_day:
-      name: Pedagocical Day
-      description: Sensor for determining if it is a pedagocical day
+      name: Pedagogical Day
+      description: Sensor for determining if it is a pedagogical day
       selector:
         entity:
           filter:
