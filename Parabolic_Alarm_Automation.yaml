@@ -34,6 +34,13 @@ blueprint:
         entity:
           filter:
             - domain: binary_sensor
+    person:
+      name: Persons
+      description: Identify Person
+      selector:
+        entity:
+          filter:
+            - domain: person
     alarm_script:
       name: Script to trigger
       description: Light Alarm Script
@@ -164,6 +171,9 @@ condition:
   - condition: state
     entity_id: !input pedagogical_day
     state: "off"
+  - condition: state
+    entiy_id: !input person
+    state: "home"
 
 action:
   - action: light.turn_on
