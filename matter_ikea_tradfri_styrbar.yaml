@@ -1,13 +1,13 @@
 blueprint:
-  name: IKEA STYRBAR Remote (Matter) - Custom Light Control (Fixed) v0.5
+  name: IKEA STYRBAR Remote (Matter) - Custom Light Control (Working) v0.6
   description: >
-    Control a light using an IKEA STYRBAR remote via Matter.
-    - Up Short: Toggle On
-    - Up Long: Increase brightness by 25
-    - Down Short: Toggle Off
-    - Down Long: Decrease brightness by 25
-    - Left Short: Cycle color temp: Warm → Neutral → Cold
-    - Right Short: Cycle color temp: Cold → Neutral → Warm
+    Control a light using IKEA STYRBAR remote via Matter.
+    - Up Short: Turn on
+    - Up Long: Brightness +25
+    - Down Short: Turn off
+    - Down Long: Brightness -25
+    - Left Short: Cycle color temp: warm → neutral → cold
+    - Right Short: Cycle color temp: cold → neutral → warm
   domain: automation
   input:
     matter_device:
@@ -60,7 +60,10 @@ trigger:
     id: right_short
 
 variables:
-  ct_values: [370, 250, 153]  # Warm, Neutral, Cold
+  light: !input light_entity
+  ct_warm: 370
+  ct_neutral: 250
+  ct_cold: 153
 
 action:
   - choose:
@@ -70,7 +73,7 @@ action:
         sequence:
           - service: light.turn_on
             target:
-              entity_id: !input light_entity
+              entity_id: "{{ light }}"
 
       - conditions:
           - condition: trigger
@@ -78,7 +81,7 @@ action:
         sequence:
           - service: light.turn_on
             target:
-              entity_id: !input light_entity
+              entity_id: "{{ light }}"
             data:
               brightness_step: 25
 
@@ -88,7 +91,7 @@ action:
         sequence:
           - service: light.turn_off
             target:
-              entity_id: !input light_entity
+              entity_id: "{{ light }}"
 
       - conditions:
           - condition: trigger
@@ -96,7 +99,7 @@ action:
         sequence:
           - service: light.turn_on
             target:
-              entity_id: !input light_entity
+              entity_id: "{{ light }}"
             data:
               brightness_step: -25
 
@@ -104,32 +107,83 @@ action:
           - condition: trigger
             id: left_short
         sequence:
-          - variables:
-              current_ct: "{{ state_attr(light_entity, 'color_temp') or 250 }}"
-              index: >
-                {% set idx = ct_values.index(current_ct | int(default=250)) if current_ct | int in ct_values else 0 %}
-                {{ (idx + 1) % ct_values | length }}
-              next_ct: "{{ ct_values[index] }}"
-          - service: light.turn_on
-            target:
-              entity_id: !input light_entity
-            data:
-              color_temp: !lambda next_ct
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ state_attr(light, 'color_temp') | int == ct_warm }}"
+                sequence:
+                  - service: light.turn_on
+                    target:
+                      entity_id: "{{ light }}"
+                    data:
+                      color_temp: "{{ ct_neutral }}"
+              - conditions:
+                  - condition: template
+                    value_template: "{{ state_attr(light, 'color_temp') | int == ct_neutral }}"
+                sequence:
+                  - service: light.turn_on
+                    target:
+                      entity_id: "{{ light }}"
+                    data:
+                      color_temp: "{{ ct_cold }}"
+              - conditions:
+                  - condition: template
+                    value_template: "{{ state_attr(light, 'color_temp') | int == ct_cold }}"
+                sequence:
+                  - service: light.turn_on
+                    target:
+                      entity_id: "{{ light }}"
+                    data:
+                      color_temp: "{{ ct_warm }}"
+              - conditions:
+                  - condition: template
+                    value_template: "{{ state_attr(light, 'color_temp') is none }}"
+                sequence:
+                  - service: light.turn_on
+                    target:
+                      entity_id: "{{ light }}"
+                    data:
+                      color_temp: "{{ ct_neutral }}"
 
       - conditions:
           - condition: trigger
             id: right_short
         sequence:
-          - variables:
-              current_ct: "{{ state_attr(light_entity, 'color_temp') or 250 }}"
-              index: >
-                {% set idx = ct_values.index(current_ct | int(default=250)) if current_ct | int in ct_values else 0 %}
-                {{ (idx - 1) % ct_values | length }}
-              prev_ct: "{{ ct_values[index] }}"
-          - service: light.turn_on
-            target:
-              entity_id: !input light_entity
-            data:
-              color_temp: !lambda prev_ct
-
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ state_attr(light, 'color_temp') | int == ct_cold }}"
+                sequence:
+                  - service: light.turn_on
+                    target:
+                      entity_id: "{{ light }}"
+                    data:
+                      color_temp: "{{ ct_neutral }}"
+              - conditions:
+                  - condition: template
+                    value_template: "{{ state_attr(light, 'color_temp') | int == ct_neutral }}"
+                sequence:
+                  - service: light.turn_on
+                    target:
+                      entity_id: "{{ light }}"
+                    data:
+                      color_temp: "{{ ct_warm }}"
+              - conditions:
+                  - condition: template
+                    value_template: "{{ state_attr(light, 'color_temp') | int == ct_warm }}"
+                sequence:
+                  - service: light.turn_on
+                    target:
+                      entity_id: "{{ light }}"
+                    data:
+                      color_temp: "{{ ct_cold }}"
+              - conditions:
+                  - condition: template
+                    value_template: "{{ state_attr(light, 'color_temp') is none }}"
+                sequence:
+                  - service: light.turn_on
+                    target:
+                      entity_id: "{{ light }}"
+                    data:
+                      color_temp: "{{ ct_neutral }}"
   - default: []
