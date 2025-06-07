@@ -1,0 +1,172 @@
+blueprint:
+  name: Matter - IKEA STYRBAR Remote Control (Model E2002) - v0.1
+  description: >
+    Trigger actions from the four buttons on an IKEA STYRBAR remote control via Matter integration.
+    Supports tap, long press, and long release for up/down buttons; tap for left/right buttons.
+    Requires an IKEA DIRIGERA hub connected to Home Assistant via the Matter integration.
+  domain: automation
+  input:
+    matter_device:
+      name: STYRBAR Remote Control
+      description: The IKEA STYRBAR remote control device.
+      selector:
+        device:
+          integration: matter
+    action_up_short:
+      name: Up Button Short Press
+      description: Action to run on short press of the up button.
+      default: []
+      selector:
+        action: {}
+    action_up_long:
+      name: Up Button Long Press
+      description: Action to run on long press of the up button.
+      default: []
+      selector:
+        action: {}
+    action_up_long_release:
+      name: Up Button Long Release
+      description: Action to run on long release of the up button.
+      default: []
+      selector:
+        action: {}
+    action_down_short:
+      name: Down Button Short Press
+      description: Action to run on short press of the down button.
+      default: []
+      selector:
+        action: {}
+    action_down_long:
+      name: Down Button Long Press
+      description: Action to run on long press of the down button.
+      default: []
+      selector:
+        action: {}
+    action_down_long_release:
+      name: Down Button Long Release
+      description: Action to run on long release of the down button.
+      default: []
+      selector:
+        action: {}
+    action_left_short:
+      name: Left Button Short Press
+      description: Action to run on short press of the left button.
+      default: []
+      selector:
+        action: {}
+    action_right_short:
+      name: Right Button Short Press
+      description: Action to run on short press of the right button.
+      default: []
+      selector:
+        action: {}
+
+trigger:
+  - platform: device
+    device_id: !input matter_device
+    domain: matter
+    type: button_pressed
+    subtype: 'up'
+    id: up_short
+  - platform: device
+    device_id: !input matter_device
+    domain: matter
+    type: button_long_pressed
+    subtype: 'up'
+    id: up_long
+  - platform: device
+    device_id: !input matter_device
+    domain: matter
+    type: button_long_release
+    subtype: 'up'
+    id: up_long_release
+  - platform: device
+    device_id: !input matter_device
+    domain: matter
+    type: button_pressed
+    subtype: 'down'
+    id: down_short
+  - platform: device
+    device_id: !input matter_device
+    domain: matter
+    type: button_long_pressed
+    subtype: 'down'
+    id: down_long
+  - platform: device
+    device_id: !input matter_device
+    domain: matter
+    type: button_long_release
+    subtype: 'down'
+    id: down_long_release
+  - platform: device
+    device_id: !input matter_device
+    domain: matter
+    type: button_pressed
+    subtype: 'left'
+    id: left_short
+  - platform: device
+    device_id: !input matter_device
+    domain: matter
+    type: button_pressed
+    subtype: 'right'
+    id: right_short
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: up_short
+        sequence:
+          - service: script.turn_on
+            target:
+              entity_id: !input action_up_short
+      - conditions:
+          - condition: trigger
+            id: up_long
+        sequence:
+          - service: script.turn_on
+            target:
+              entity_id: !input action_up_long
+      - conditions:
+          - condition: trigger
+            id: up_long_release
+        sequence:
+          - service: script.turn_on
+            target:
+              entity_id: !input action_up_long_release
+      - conditions:
+          - condition: trigger
+            id: down_short
+        sequence:
+          - service: script.turn_on
+            target:
+              entity_id: !input action_down_short
+      - conditions:
+          - condition: trigger
+            id: down_long
+        sequence:
+          - service: script.turn_on
+            target:
+              entity_id: !input action_down_long
+      - conditions:
+          - condition: trigger
+            id: down_long_release
+        sequence:
+          - service: script.turn_on
+            target:
+              entity_id: !input action_down_long_release
+      - conditions:
+          - condition: trigger
+            id: left_short
+        sequence:
+          - service: script.turn_on
+            target:
+              entity_id: !input action_left_short
+      - conditions:
+          - condition: trigger
+            id: right_short
+        sequence:
+          - service: script.turn_on
+            target:
+              entity_id: !input action_right_short
+  - default: []
