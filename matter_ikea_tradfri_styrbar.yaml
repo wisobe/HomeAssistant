@@ -1,8 +1,8 @@
 blueprint:
-  name: IKEA STYRBAR Remote (Matter) - Default Light Control v0.2
+  name: IKEA STYRBAR Remote (Matter) - Default Light Control v0.3
   description: >
     Pre-configured blueprint that mimics original STYRBAR remote behavior:
-    brightness control, scene toggles, etc.
+    brightness control, toggling lights, etc.
   domain: automation
   input:
     matter_device:
@@ -65,20 +65,16 @@ action:
             target: !input light_target
             data:
               brightness_step: 25
+
       - conditions:
           - condition: trigger
             id: up_long
         sequence:
-          - repeat:
-              while:
-                - condition: template
-                  value_template: "{{ true }}"  # you can add more logic here
-              sequence:
-                - service: light.turn_on
-                  target: !input light_target
-                  data:
-                    brightness_step: 10
-                - delay: 0.5
+          - service: light.turn_on
+            target: !input light_target
+            data:
+              brightness_step: 50
+
       - conditions:
           - condition: trigger
             id: down_short
@@ -87,26 +83,23 @@ action:
             target: !input light_target
             data:
               brightness_step: -25
+
       - conditions:
           - condition: trigger
             id: down_long
         sequence:
-          - repeat:
-              while:
-                - condition: template
-                  value_template: "{{ true }}"
-              sequence:
-                - service: light.turn_on
-                  target: !input light_target
-                  data:
-                    brightness_step: -10
-                - delay: 0.5
+          - service: light.turn_on
+            target: !input light_target
+            data:
+              brightness_step: -50
+
       - conditions:
           - condition: trigger
             id: left_short
         sequence:
           - service: light.turn_off
             target: !input light_target
+
       - conditions:
           - condition: trigger
             id: right_short
