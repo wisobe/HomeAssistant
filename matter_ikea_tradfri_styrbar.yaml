@@ -1,13 +1,13 @@
 blueprint:
-  name: IKEA STYRBAR Remote (Matter) - Custom Light Control v0.4
+  name: IKEA STYRBAR Remote (Matter) - Custom Light Control (Fixed) v0.5
   description: >
     Control a light using an IKEA STYRBAR remote via Matter.
     - Up Short: Toggle On
     - Up Long: Increase brightness by 25
     - Down Short: Toggle Off
     - Down Long: Decrease brightness by 25
-    - Left Short: Cycle color temperature (warm → neutral → cold)
-    - Right Short: Cycle color temperature (cold → neutral → warm)
+    - Left Short: Cycle color temp: Warm → Neutral → Cold
+    - Right Short: Cycle color temp: Cold → Neutral → Warm
   domain: automation
   input:
     matter_device:
@@ -105,30 +105,31 @@ action:
             id: left_short
         sequence:
           - variables:
-              current_ct: >
-                {{ state_attr(light_entity, 'color_temp') or 250 }}
+              current_ct: "{{ state_attr(light_entity, 'color_temp') or 250 }}"
               index: >
-                {{ (ct_values.index(current_ct) + 1) % ct_values | length if current_ct in ct_values else 0 }}
+                {% set idx = ct_values.index(current_ct | int(default=250)) if current_ct | int in ct_values else 0 %}
+                {{ (idx + 1) % ct_values | length }}
               next_ct: "{{ ct_values[index] }}"
           - service: light.turn_on
             target:
               entity_id: !input light_entity
             data:
-              color_temp: "{{ next_ct }}"
+              color_temp: !lambda next_ct
 
       - conditions:
           - condition: trigger
             id: right_short
         sequence:
           - variables:
-              current_ct: >
-                {{ state_attr(light_entity, 'color_temp') or 250 }}
+              current_ct: "{{ state_attr(light_entity, 'color_temp') or 250 }}"
               index: >
-                {{ (ct_values.index(current_ct) - 1) % ct_values | length if current_ct in ct_values else 0 }}
+                {% set idx = ct_values.index(current_ct | int(default=250)) if current_ct | int in ct_values else 0 %}
+                {{ (idx - 1) % ct_values | length }}
               prev_ct: "{{ ct_values[index] }}"
           - service: light.turn_on
             target:
               entity_id: !input light_entity
             data:
-              color_temp: "{{ prev_ct }}"
+              color_temp: !lambda prev_ct
+
   - default: []
