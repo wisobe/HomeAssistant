@@ -164,7 +164,7 @@ trigger:
 condition:
   - condition: state
     entity_id: !input workday_sensor
-    state: "on"
+    state: "off"
   - condition: state
     entity_id: !input home_deactivated
     state: "off"
