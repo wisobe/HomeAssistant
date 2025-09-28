@@ -1,8 +1,8 @@
-# Blueprint developped by Steku -  https://github.com/steku/ha_cercadian_alarm
+# Blueprint developed by Steku -  https://github.com/steku/ha_cercadian_alarm
 # Adapted by WisoBe for personal needs
 # Link: https://github.com/wisobe/HomeAssistant/blob/main/Parabolic_Alarm_Automation.yaml
 blueprint:
-  name: Parabolic Alarm Automation - WisoBe - 0.2.6
+  name: Parabolic Alarm Automation - WisoBe - 0.2.7
   description: Turn a light on based on detected motion
   domain: automation
   input:
@@ -157,11 +157,36 @@ blueprint:
           max: 60
       default: 5
 
+    weekdays:
+      name: Days of the week
+      description: Select on which days the alarm should run
+      default: [mon, tue, wed, thu, fri]
+      selector:
+        select:
+          multiple: true
+          options:
+            - value: mon
+              label: Monday
+            - value: tue
+              label: Tuesday
+            - value: wed
+              label: Wednesday
+            - value: thu
+              label: Thursday
+            - value: fri
+              label: Friday
+            - value: sat
+              label: Saturday
+            - value: sun
+              label: Sunday
+
 trigger:
   - platform: time
     at: !input alarm_start_time
 
 condition:
+  - condition: time
+    weekday: !input weekdays
   - condition: state
     entity_id: !input workday_sensor
     state: "off"
