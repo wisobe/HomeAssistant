@@ -2,7 +2,7 @@
 # Adapted by WisoBe for personal needs
 # Link: https://github.com/wisobe/HomeAssistant/blob/main/Parabolic_Alarm_Automation.yaml
 blueprint:
-  name: Parabolic Alarm Automation - WisoBe - 0.2.7
+  name: Parabolic Alarm Automation - WisoBe - 0.2.8
   description: Turn a light on based on detected motion
   domain: automation
   input:
@@ -187,15 +187,21 @@ trigger:
 condition:
   - condition: time
     weekday: !input weekdays
-  - condition: state
-    entity_id: !input workday_sensor
-    state: "off"
+
+  # Run if EITHER pedagogical_day is off OR workday_sensor is off
+  - condition: or
+    conditions:
+      - condition: state
+        entity_id: !input pedagogical_day
+        state: "off"
+      - condition: state
+        entity_id: !input workday_sensor
+        state: "off"
+
   - condition: state
     entity_id: !input home_deactivated
     state: "off"
-  - condition: state
-    entity_id: !input pedagogical_day
-    state: "off"
+
   - condition: state
     entity_id: !input person
     state: "home"
