@@ -3,12 +3,12 @@ blueprint:
   description: |
     📲 Notifies you when a door or window is left open.
 
-    🚀 Version 2026.02.17.1
+    🚀 Version 2026.02.17.2
 
     Are you tired of worrying about open doors or windows? This blueprint has got you covered! It's designed to send you a prompt notification when a door or window remains open for a specified duration.
 
   domain: automation
-  source_url: https://gist.github.com/Raukze/27fe0c6bf6d91b8ae2ab5e11880509ba
+  source_url: https://github.com/wisobe/HomeAssistant/blob/main/contact_sensor_open.yaml
   input:
     trigger_entity:
       name: 🤖 Entity
