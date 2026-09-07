@@ -1,4 +1,3 @@
-```yaml
 # Blueprint developed by Steku -  https://github.com/steku/ha_cercadian_alarm
 # Adapted by WisoBe for personal needs
 # Link: https://github.com/wisobe/HomeAssistant/blob/main/Parabolic_Alarm_Automation.yaml
@@ -242,4 +241,3 @@ action:
           target_light: !input target_light
 mode: parallel
 max: 10
-```
